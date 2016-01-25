@@ -28,12 +28,14 @@ $ pip3 install Flask
 
 1. Build project structure
 
+```
  |-env (created by venv)
  |-static (for css)
  |-templates (for html)
  |-app.py
  |-readme.md
  |-.gitignore
+```
 
 1. Add files to be ignored into gitignore
 
