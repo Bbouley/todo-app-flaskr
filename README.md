@@ -46,4 +46,73 @@
   __pycache__
   ```
 
-1.
+1. Build hello_world in app.py
+
+  ```py
+  from flask import Flask
+
+  app = Flask(__name__)
+
+  @app.route('/')
+  def hello_world():
+    return 'Hello World!'
+
+  if __name__ == '__main__':
+    app.debug = True
+    app.run()
+  ```
+
+  - Adding in ```app.debug = True``` means the server reloads itself on code changes and provides a debugger if things go wrong
+
+1. Add in new routes to mess around a bit
+
+  ```py
+  @app.route('/hello')
+  def hello_world():
+    return 'Hello World!'
+
+  @app.route('/')
+  def index():
+    return 'This is the index page'
+  ```
+
+1. Add index.html to templates
+1. Download skeleton and normalize.css and put into static folder, add links to html page. Build html page with test to check user templates
+
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Flaskr TODO</title>
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../skeleton.css">
+    <link rel="stylesheet" type="text/css" href="../styles.css">
+  </head>
+  <body>
+
+    <h1>To Do</h1>
+
+    <h2>Testing section</h2>
+
+    {% if name %}
+      <h2>Hello {{ name }}</h2>
+    {% else %}
+      <h2>Hello World!!</h2>
+    {% endif %}
+
+  </body>
+  </html>
+  ```
+1. add ```render_template``` to import, and build new route to render index
+
+```py
+from flask import Flask, render_template
+```
+
+```py
+@app.route('/')
+def index(name=None):
+  return render_template('index.html', name=name)
+```
+
