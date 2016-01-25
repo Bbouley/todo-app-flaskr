@@ -85,9 +85,9 @@
   <head>
     <meta charset="UTF-8">
     <title>Flaskr TODO</title>
-    <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../skeleton.css">
-    <link rel="stylesheet" type="text/css" href="../styles.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='normalize.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='skeleton.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
   </head>
   <body>
 
@@ -115,4 +115,19 @@ from flask import Flask, render_template
 def index(name=None):
   return render_template('index.html', name=name)
 ```
+
+1. Add form to html
+
+ ```html
+  <form>
+      <div class="row">
+        <div class="three columns">
+          <label for="todoInput">Enter Item</label>
+          <input class="u-full-width" type="text" placeholder="enter todo" id="todoInput">
+        </div>
+      </div>
+    </form>
+ ```
+
+1.
 
