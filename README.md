@@ -20,30 +20,30 @@
 
 1. Create dir, activate virtualenv and install flask
 
-```sh
-$ pyvenv-3.5 env
-$ source env/bin/activate
-$ pip3 install Flask
-```
+  ```sh
+  $ pyvenv-3.5 env
+  $ source env/bin/activate
+  $ pip3 install Flask
+  ```
 
-1. Build project structure
+2. Build project structure
 
-```
- |-env (created by venv)
- |-static (for css)
- |-templates (for html)
- |-app.py
- |-readme.md
- |-.gitignore
-```
+  ```
+   |-env (created by venv)
+   |-static (for css)
+   |-templates (for html)
+   |-app.py
+   |-readme.md
+   |-.gitignore
+  ```
 
-1. Add files to be ignored into gitignore
+3. Add files to be ignored into gitignore
 
-```
-env
-*.pyc
-*.DS_Store
-__pycache__
-```
+  ```
+  env
+  *.pyc
+  *.DS_Store
+  __pycache__
+  ```
 
-1.
+4.
