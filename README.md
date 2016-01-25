@@ -182,7 +182,40 @@
         connect.close()
     ```
 
-1.
+1. added read function to get data from database, and edited index route to get data. also added get data function to get route. sending todos object back to server, but ids are also being sent currently. html changed to reflect and display this.
+
+    ```py
+    def get_all_data():
+        connect = sqlite3.connect('todo.db')
+        cursor = connect.cursor()
+        print('database opened')
+        cursor.execute("SELECT * FROM entries")
+        return list(cursor.fetchall())
+    ```
+
+    ```py
+    @app.route('/', methods=['GET', 'POST'])
+    def index():
+        if request.method == 'POST':
+            inputValue = request.form['todoInputName']
+            add_data(inputValue)
+            return render_template('index.html', lastInput=inputValue)
+        elif request.method == 'GET':
+            data = get_all_data()
+            print(data)
+            return render_template('index.html', todos=data)
+    ```
+
+    ```html
+    <div class="list">
+      <ul>
+      {% for todo in todos %}
+        <li>{{ todo }}</li>
+      {% endfor %}
+      </ul>
+    </div>
+    ```
+
 
 
 ## Questions/Issues

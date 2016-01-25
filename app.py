@@ -26,6 +26,13 @@ def add_data(item):
     print ('Records Created')
     connect.close()
 
+def get_all_data():
+    connect = sqlite3.connect('todo.db')
+    cursor = connect.cursor()
+    print('database opened')
+    cursor.execute("SELECT * FROM entries")
+    return list(cursor.fetchall())
+
 @app.route('/hello')
 def hello_world():
     return 'Hello World!'
@@ -35,8 +42,11 @@ def index():
     if request.method == 'POST':
         inputValue = request.form['todoInputName']
         add_data(inputValue)
-        return render_template('index.html', lastInput=inputValue)
-    return render_template('index.html')
+        data = get_all_data()
+        return render_template('index.html', lastInput=inputValue, todos=data)
+    elif request.method == 'GET':
+        data = get_all_data()
+        return render_template('index.html', todos=data)
 
 
 

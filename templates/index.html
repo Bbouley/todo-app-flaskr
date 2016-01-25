@@ -13,7 +13,7 @@
     <h1>To Do</h1>
 
     {% if lastInput %}
-      <h2>Last Input {{ lastInput }}</h2>
+      <h2>Last Input = '{{ lastInput }}'</h2>
     {% else %}
       <h2>Nothing Input In this Session yet!!!</h2>
     {% endif %}
@@ -23,9 +23,18 @@
         <div class="three columns">
           <label for="todoInput">Enter Item</label>
           <input class="u-full-width" type="text" placeholder="enter todo" id="todoInput" name="todoInputName">
+          <input class="button-primary" type="submit" value="Submit">
         </div>
       </div>
     </form>
+
+    <div class="list">
+      <ul>
+      {% for todo in todos %}
+        <li>{{ todo }}</li>
+      {% endfor %}
+      </ul>
+    </div>
 
   </div>
 
