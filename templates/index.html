@@ -14,17 +14,17 @@
 
     <h2>Testing section</h2>
 
-    {% if name %}
-      <h2>Hello {{ name }}</h2>
+    {% if test %}
+      <h2>Hello {{ test }}</h2>
     {% else %}
       <h2>Hello World!!</h2>
     {% endif %}
 
-    <form>
+    <form action="{{ url_for('index') }}" method="post" class="add-entry">
       <div class="row">
         <div class="three columns">
           <label for="todoInput">Enter Item</label>
-          <input class="u-full-width" type="text" placeholder="enter todo" id="todoInput">
+          <input class="u-full-width" type="text" placeholder="enter todo" id="todoInput" name="todoInputName">
         </div>
       </div>
     </form>

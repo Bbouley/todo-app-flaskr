@@ -106,28 +106,48 @@
   ```
 1. add ```render_template``` to import, and build new route to render index
 
-```py
-from flask import Flask, render_template
-```
+  ```py
+  from flask import Flask, render_template
+  ```
 
-```py
-@app.route('/')
-def index(name=None):
-  return render_template('index.html', name=name)
-```
+  ```py
+  @app.route('/')
+  def index(name=None):
+    return render_template('index.html', name=name)
+  ```
 
-1. Add form to html
+1. Add form to html, include action as shown below
 
- ```html
-  <form>
-      <div class="row">
-        <div class="three columns">
-          <label for="todoInput">Enter Item</label>
-          <input class="u-full-width" type="text" placeholder="enter todo" id="todoInput">
-        </div>
+  ```html
+  <form action="{{ url_for('add_todo') }}" method="post" class="add-entry">
+    <div class="row">
+      <div class="three columns">
+        <label for="todoInput">Enter Item</label>
+        <input class="u-full-width" type="text" placeholder="enter todo" id="todoInput">
       </div>
-    </form>
- ```
+    </div>
+  </form>
+  ```
 
-1.
+1. add sql schema
+
+  ```
+  drop table if exists entries;
+  create table entries (
+    id integer primary key autoincrement
+    content text not null
+  );
+  ```
+
+1. add route to allow post requests to /add endpoint
+1. add ```import sqlite3```
+1. create db config in app.py
+1. add ```g``` to import from flask
+1. create connect_db function
+
+
+## Questions/Issues
+
+- Setting up a connection to sql db
+
 
