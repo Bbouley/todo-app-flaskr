@@ -26,7 +26,7 @@
   $ pip3 install Flask
   ```
 
-2. Build project structure
+1. Build project structure
 
   ```
    |-env (created by venv)
@@ -37,7 +37,7 @@
    |-.gitignore
   ```
 
-3. Add files to be ignored into gitignore
+1. Add files to be ignored into gitignore
 
   ```
   env
@@ -46,4 +46,4 @@
   __pycache__
   ```
 
-4.
+1.
