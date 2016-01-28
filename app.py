@@ -1,4 +1,5 @@
 import sqlite3
+import numpy as np
 from flask import Flask, render_template, g, request
 
 app = Flask(__name__)
@@ -31,7 +32,9 @@ def get_all_data():
     cursor = connect.cursor()
     print('database opened')
     cursor.execute("SELECT * FROM entries")
-    return list(cursor.fetchall())
+    todo_list = list(cursor.fetchall())
+    todo_array = np.asarray(todo_list)
+    return todo_array
 
 @app.route('/hello')
 def hello_world():
@@ -46,7 +49,7 @@ def index():
         return render_template('index.html', lastInput=inputValue, todos=data)
     elif request.method == 'GET':
         data = get_all_data()
-        return render_template('index.html', todos=data)
+        return render_template('index.html', todos=zip(data))
 
 
 
