@@ -280,6 +280,7 @@
 
     ```js
     $(document).on('click', '.delete', function(e) {
+        e.preventDefault();
         var $db_id = $(this).parent().attr('id')
         var $this = $(this)
         $.ajax({
@@ -305,7 +306,8 @@
     ```
 
     ```js
-    $(document).on('click', '.edit', function() {
+    $(document).on('click', '.edit', function(e) {
+        e.preventDefault();
         var thisEl = thisEl
         var $db_id = thisEl.parent().attr('id')
         var element = '<input type="text" id="' + $db_id + '" required></input>'
@@ -319,7 +321,8 @@
 1. Next step is adding an event listener to .sendEdit. On click I want it to grab the form value of the dynamically created form and send that as an edit to my server. At the moment, when information is sent back, I want the page to reload. There needs to be a change here, so that I can handle any errors in editing something in the database.
 
     ```js
-    $(document).on('click', '.sendEdit', function() {
+    $(document).on('click', '.sendEdit', function(e) {
+        e.preventDefault();
         var thisEl = $(this)
         var edit = {
             data: thisEl.prev().val()
@@ -356,6 +359,72 @@
         except:
             result = {'status': 0, 'message' : 'Error'}
         return jsonify(result)
+    ```
+
+1. I had to edit my js file as I had two elements with the same id, and hide and show wasn't working. I also added a redirect into my success function on edit. If I used a reload then It resends through previous entry in submit and adds it to the database. So I used a redirect. below is my final js file.
+
+    ```js
+    $(document).on('ready', function() {
+        // console.log('sanity check')
+        $(document).on('click', '.delete', function(e) {
+            e.preventDefault()
+            var $db_id = $(this).parent().attr('class')
+            var $this = $(this)
+            $.ajax({
+                url: '/delete/' + $db_id,
+                method: 'GET',
+                success: function(result) {
+                    if(result.status === 1) {
+                        $this.parent().remove()
+                    }
+                }
+            });
+        });
+
+        $(document).on('click', '.edit', function(e) {
+            e.preventDefault();
+            var thisEl = $(this)
+            var $db_id = thisEl.parent().attr('class')
+            var element = '<input type="text" id="' + $db_id + '" required>&nbsp;'
+            var buttonElement = '<button class="sendEdit" id="send'+ $db_id +'">Edit</button>'
+            thisEl.parent().append(element);
+            thisEl.parent().append(buttonElement);
+            thisEl.hide()
+        });
+
+        $(document).on('click', '.sendEdit', function(e) {
+            e.preventDefault();
+            var thisEl = $(this)
+            var formVal = thisEl.prev().val()
+            if (formVal.length === 0) {
+                thisEl.addClass('warning');
+            } else {
+                var edit = {
+                    data: thisEl.prev().val()
+                }
+                var $db_id = thisEl.parent().attr('class')
+                console.log($db_id)
+                $.ajax({
+                    url: '/edit/' + $db_id,
+                    contentType: 'application/json',
+                    method: 'POST',
+                    data: JSON.stringify(edit),
+                    datatype: 'json',
+                    success: function(result) {
+                        if (result.status === 1) {
+                            $('#send' + $db_id + '').hide();
+                            $('#' + $db_id + '').hide();
+                            $('.edit').show();
+                            window.location.replace("/");
+                        } else {
+                            //error handler
+                        }
+                    }
+                });
+            }
+        });
+
+    });
     ```
 
 
