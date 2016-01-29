@@ -51,9 +51,7 @@ def index():
 def delete_entry(todo_id):
     result = {'status' : 0, 'message' : 'Error'}
     try:
-        print(todo_id)
         connect = sqlite3.connect('todo.db')
-        print('DB opened')
         connect.execute("DELETE FROM entries WHERE id = ?", (todo_id,))
         connect.commit()
         connect.close()
@@ -62,6 +60,21 @@ def delete_entry(todo_id):
         result = {'status': 0, 'message': 'Error'}
     return jsonify(result)
 
+@app.route('/edit/<todo_id>', methods=['POST'])
+def edit_entry(todo_id):
+    result = {'status' : 0, 'message' : 'Error'}
+    data_object = request.get_json()
+    update = data_object['data']
+    print (update)
+    try:
+        connect = sqlite3.connect('todo.db')
+        connect.execute("UPDATE entries SET content = ? WHERE ID = ?;", (update, todo_id,))
+        connect.commit()
+        connect.close()
+        result = {'status': 1, 'message' : 'TODO Edited'}
+    except:
+        result = {'status': 0, 'message' : 'Error'}
+    return jsonify(result)
 
 
 if __name__ == '__main__':

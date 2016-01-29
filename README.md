@@ -294,6 +294,70 @@
     });
     ```
 
+1. Starting edit route. Add an edit button to html, then target it with jquery and append an edit box with a new button that can be used to send information to the server with an ajax request. Below is the code to add button to html with class sendEdit, which I can then later add another event listener to to send information to server.
+
+    ```html
+    <div id = {{ todo[0] }}>
+        <h3>{{ todo[1] }}</h3>
+        <button class="delete">X</button>
+        <button class="edit">Edit</button>
+    </div>
+    ```
+
+    ```js
+    $(document).on('click', '.edit', function() {
+        var thisEl = thisEl
+        var $db_id = thisEl.parent().attr('id')
+        var element = '<input type="text" id="' + $db_id + '" required></input>'
+        var buttonElement = '&lt;<button class="sendEdit">Edit</button>'
+        thisEl.parent().append(element);
+        thisEl.parent().append(buttonElement);
+        thisEl.hide()
+    });
+    ```
+
+1. Next step is adding an event listener to .sendEdit. On click I want it to grab the form value of the dynamically created form and send that as an edit to my server. At the moment, when information is sent back, I want the page to reload. There needs to be a change here, so that I can handle any errors in editing something in the database.
+
+    ```js
+    $(document).on('click', '.sendEdit', function() {
+        var thisEl = $(this)
+        var edit = {
+            data: thisEl.prev().val()
+        }
+        var $db_id = thisEl.parent().attr('id')
+        $.ajax({
+            url: '/edit/' + $db_id,
+            contentType: 'application/json',
+            method: 'POST',
+            data: JSON.stringify(edit),
+            datatype: 'json',
+            success: function(result) {
+                window.location.reload();
+            }
+        });
+    });
+    ```
+
+1. Now I needed to set up a route that would handle the incoming request and make the appropriate call to the database updating entry, and handling any errors if there were any. Finally, sending the appropriate object back to the client-side. In order to get the POST request as json, I had to call get_json on the request, and then use bracket notation (NOT DOT), to get the form value I was looking for. Which comes in as {data : 'some value'}.
+
+    ```py
+    @app.route('/edit/<todo_id>', methods=['POST'])
+    def edit_entry(todo_id):
+        result = {'status' : 0, 'message' : 'Error'}
+        data_object = request.get_json()
+        update = data_object['data']
+        print (update)
+        try:
+            connect = sqlite3.connect('todo.db')
+            connect.execute("UPDATE entries SET content = ? WHERE ID = ?;", (update, todo_id,))
+            connect.commit()
+            connect.close()
+            result = {'status': 1, 'message' : 'TODO Edited'}
+        except:
+            result = {'status': 0, 'message' : 'Error'}
+        return jsonify(result)
+    ```
+
 
 ## Questions/Issues
 
