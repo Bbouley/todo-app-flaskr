@@ -297,6 +297,5 @@
 
 ## Questions/Issues
 
-- Setting up a connection to sql db
 
 

@@ -22,21 +22,20 @@
       <div class="row">
         <div class="three columns">
           <label for="todoInput">Enter Item</label>
-          <input class="u-full-width" type="text" placeholder="enter todo" id="todoInput" name="todoInputName">
+          <input class="u-full-width" type="text" placeholder="enter todo" id="todoInput" name="todoInputName" required>
           <input class="button-primary" type="submit" value="Submit">
         </div>
       </div>
     </form>
 
     <div class="list">
-      <ul>
       {% for todo in todos %}
-        <li id = {{ todo[0] }}>
+        <div id = {{ todo[0] }}>
           <h3>{{ todo[1] }}</h3>
           <button class="delete">X</button>
-        </li>
+          <button class="edit">Edit</button>
+        </div>
       {% endfor %}
-      </ul>
     </div>
 
   </div>

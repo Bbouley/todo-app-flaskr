@@ -25,15 +25,6 @@ def add_data(item):
     connect.commit()
     connect.close()
 
-# def delete_data(item_id):
-#     connect = sqlite3.connect('todo.db')
-#     print('DB opened')
-#     connect.execute("DELETE FROM entries WHERE content = '{}'".format(item_id))
-#     connect.commit()
-#     print('Item Deleted')
-#     connect.close()
-
-
 def get_all_data():
     connect = sqlite3.connect('todo.db')
     cursor = connect.cursor()
