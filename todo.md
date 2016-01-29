@@ -1,5 +1,5 @@
 ### To Do
 
-- add delete function
-- add edit function
-- make it look nice
+- Form validation to prevent blank errors being put in
+- Add edit function
+- Make it look nice
