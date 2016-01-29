@@ -1,6 +1,6 @@
 import sqlite3
-import numpy as np
-from flask import Flask, render_template, g, request
+# import numpy as np
+from flask import Flask, render_template, g, request, jsonify
 
 app = Flask(__name__)
 
@@ -21,20 +21,25 @@ def init_db():
 
 def add_data(item):
     connect = sqlite3.connect('todo.db')
-    print('database opened')
     connect.execute("INSERT INTO entries (content) VALUES ('{}');".format(item))
     connect.commit()
-    print ('Records Created')
     connect.close()
+
+# def delete_data(item_id):
+#     connect = sqlite3.connect('todo.db')
+#     print('DB opened')
+#     connect.execute("DELETE FROM entries WHERE content = '{}'".format(item_id))
+#     connect.commit()
+#     print('Item Deleted')
+#     connect.close()
+
 
 def get_all_data():
     connect = sqlite3.connect('todo.db')
     cursor = connect.cursor()
-    print('database opened')
-    cursor.execute("SELECT * FROM entries")
-    todo_list = list(cursor.fetchall())
-    todo_array = np.asarray(todo_list)
-    return todo_array
+    cursor.execute("SELECT * FROM entries ORDER BY id desc")
+    todo_list = cursor.fetchall()
+    return todo_list
 
 @app.route('/hello')
 def hello_world():
@@ -49,7 +54,22 @@ def index():
         return render_template('index.html', lastInput=inputValue, todos=data)
     elif request.method == 'GET':
         data = get_all_data()
-        return render_template('index.html', todos=zip(data))
+        return render_template('index.html', todos=data)
+
+@app.route('/delete/<todo_id>', methods=['GET'])
+def delete_entry(todo_id):
+    result = {'status' : 0, 'message' : 'Error'}
+    try:
+        print(todo_id)
+        connect = sqlite3.connect('todo.db')
+        print('DB opened')
+        connect.execute("DELETE FROM entries WHERE id = ?", (todo_id,))
+        connect.commit()
+        connect.close()
+        result = {'status': 1, 'message' : 'TODO Deleted'}
+    except:
+        result = {'status': 0, 'message': 'Error'}
+    return jsonify(result)
 
 
 

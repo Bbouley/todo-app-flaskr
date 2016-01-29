@@ -31,7 +31,10 @@
     <div class="list">
       <ul>
       {% for todo in todos %}
-        <li>{{ todo[1] }}</li>
+        <li id = {{ todo[0] }}>
+          <h3>{{ todo[1] }}</h3>
+          <button class="delete">X</button>
+        </li>
       {% endfor %}
       </ul>
     </div>
@@ -39,6 +42,7 @@
   </div>
 
 
-
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <script type="text/javascript" src="../static/main.js"></script>
 </body>
 </html>

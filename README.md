@@ -189,7 +189,7 @@
         connect = sqlite3.connect('todo.db')
         cursor = connect.cursor()
         print('database opened')
-        cursor.execute("SELECT * FROM entries")
+        cursor.execute("SELECT * FROM entries ORDER BY id desc")
         return list(cursor.fetchall())
     ```
 
@@ -210,12 +210,89 @@
     <div class="list">
       <ul>
       {% for todo in todos %}
-        <li>{{ todo }}</li>
+        <li>{{ todo[1] }}</li>
       {% endfor %}
       </ul>
     </div>
     ```
 
+1. Add id to li element being created using todo[0], and add a delete button to those as well.
+
+    ```html
+    <div class="list">
+      <ul>
+      {% for todo in todos %}
+        <li id = {{ todo[0] }}>
+          <h3>{{ todo[1] }}</h3>
+          <button class="delete">X</button>
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+    ```
+
+1. Create a main.js file in static folder and then add in scripts for both jquery and the main.js file at the bottom of the html
+
+    ```html
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="../static/main.js"></script>
+    ```
+
+1. Create an ajax request on button click so when user clicks the x button it will send ajax query GET request to server side. Note the format of the on click function. This is because we are created our li elements dynamically so we have to use delegated events.
+
+    ```js
+    $(document).on('ready', function() {
+
+        $(document).on('click', '.delete', function(e) {
+            var $db_id = $(this).parent().attr('id')
+            var $this = $(this)
+            $.ajax({
+                url: '/delete/' + $db_id,
+                method: 'GET',
+                success: function(result) {
+                //Code Things Here
+                }
+            });
+        });
+    });
+    ```
+
+1. Add in route on server that corresponds to the route the ajax request will hit. Then use try/except to either return error or success object depending on the db connection result. We also have to add in jsonify to import from flask, so we can send json objects back
+
+    ```py
+    @app.route('/delete/<todo_id>', methods=['GET'])
+    def delete_entry(todo_id):
+        result = {'status' : 0, 'message' : 'Error'}
+        try:
+            print(todo_id)
+            connect = sqlite3.connect('todo.db')
+            print('DB opened')
+            connect.execute("DELETE FROM entries WHERE id = ?", (todo_id,))
+            connect.commit()
+            connect.close()
+            result = {'status': 1, 'message' : 'TODO Deleted'}
+        except:
+            result = {'status': 0, 'message': 'Error'}
+        return jsonify(result)
+    ```
+
+1. So we now have a setup that will hit the database and return error object if deletion is unsuccessful or success object if successful. We send this object back to client and can perform logic on it with jquery. So now the whole ajax call with logic, looks like this:
+
+    ```js
+    $(document).on('click', '.delete', function(e) {
+        var $db_id = $(this).parent().attr('id')
+        var $this = $(this)
+        $.ajax({
+            url: '/delete/' + $db_id,
+            method: 'GET',
+            success: function(result) {
+                if(result.status === 1) {
+                    $this.parent().remove()
+                }
+            }
+        });
+    });
+    ```
 
 
 ## Questions/Issues
